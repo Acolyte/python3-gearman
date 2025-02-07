@@ -2,7 +2,7 @@ import collections
 import json
 
 from python3_gearman.constants import PRIORITY_NONE, JOB_UNKNOWN, \
-    JOB_PENDING, JOB_CREATED, JOB_FAILED, JOB_COMPLETE
+    JOB_CREATED, JOB_FAILED, JOB_COMPLETE
 
 
 class GearmanJob(object):
@@ -26,19 +26,21 @@ class GearmanJob(object):
 
     def __repr__(self):
         return (
-            '<GearmanJob connection/handle=' +
-            '(%r, %r), task=%s, unique=%s, data=%r>' % (
-                self.connection,
-                self.handle,
-                self.task,
-                self.unique,
-                self.data
-            )
+                '<GearmanJob connection/handle=' +
+                '(%r, %r), task=%s, unique=%s, data=%r>' % (
+                    self.connection,
+                    self.handle,
+                    self.task,
+                    self.unique,
+                    self.data
+                )
         )
+
 
 class GearmanJobEncoder(json.JSONEncoder):
     def default(self, obj):
         return obj.__dict__
+
 
 class GearmanJobDencoder(json.JSONDecoder):
     def __init__(self):
@@ -47,6 +49,7 @@ class GearmanJobDencoder(json.JSONDecoder):
     @staticmethod
     def from_dict(d):
         return d
+
 
 class GearmanJobRequest(object):
     """Represents a job request... used in GearmanClient to represent job
@@ -124,8 +127,8 @@ class GearmanJobRequest(object):
 
     def __repr__(self):
         formatted_representation = (
-            '<GearmanJobRequest task=%r, unique=%r, priority=%r, ' +
-            'background=%r, state=%r, timed_out=%r>'
+                '<GearmanJobRequest task=%r, unique=%r, priority=%r, ' +
+                'background=%r, state=%r, timed_out=%r>'
         )
         return formatted_representation % (self.job.task,
                                            self.job.unique,
@@ -134,9 +137,11 @@ class GearmanJobRequest(object):
                                            self.state,
                                            self.timed_out)
 
+
 class GearmanJobRequestEncoder(json.JSONEncoder):
     def default(self, obj):
         return obj.__dict__
+
 
 class GearmanJobRequestDencoder(json.JSONDecoder):
     def __init__(self):
