@@ -145,6 +145,8 @@ class GearmanJobRequestEncoder(json.JSONEncoder):
         result['data_updates'] = list(obj.data_updates)
         result['status_updates'] = list(obj.status_updates)
 
+        return result
+
 
 class GearmanJobRequestDecoder(json.JSONDecoder):
     def __init__(self):
