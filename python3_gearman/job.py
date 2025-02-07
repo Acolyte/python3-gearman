@@ -1,4 +1,6 @@
 import collections
+import json
+
 from python3_gearman.constants import PRIORITY_NONE, JOB_UNKNOWN, \
     JOB_PENDING, JOB_CREATED, JOB_FAILED, JOB_COMPLETE
 
@@ -34,6 +36,17 @@ class GearmanJob(object):
             )
         )
 
+class GearmanJobEncoder(json.JSONEncoder):
+    def default(self, obj):
+        return obj.__dict__
+
+class GearmanJobDencoder(json.JSONDecoder):
+    def __init__(self):
+        json.JSONDecoder.__init__(self, object_hook=GearmanJobDencoder.from_dict)
+
+    @staticmethod
+    def from_dict(d):
+        return d
 
 class GearmanJobRequest(object):
     """Represents a job request... used in GearmanClient to represent job
@@ -120,3 +133,15 @@ class GearmanJobRequest(object):
                                            self.background,
                                            self.state,
                                            self.timed_out)
+
+class GearmanJobRequestEncoder(json.JSONEncoder):
+    def default(self, obj):
+        return obj.__dict__
+
+class GearmanJobRequestDencoder(json.JSONDecoder):
+    def __init__(self):
+        json.JSONDecoder.__init__(self, object_hook=GearmanJobRequestDencoder.from_dict)
+
+    @staticmethod
+    def from_dict(d):
+        return d

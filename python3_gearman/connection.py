@@ -1,12 +1,13 @@
 import collections
+import json
 import logging
 import socket
 import struct
 import time
 
+from python3_gearman.constants import DEFAULT_GEARMAN_PORT, _DEBUG_MODE_
 from python3_gearman.errors import ConnectionError, ProtocolError, \
     ServerUnavailable
-from python3_gearman.constants import DEFAULT_GEARMAN_PORT, _DEBUG_MODE_
 from python3_gearman.protocol import GEARMAN_PARAMS_FOR_COMMAND, \
     GEARMAN_COMMAND_TEXT_COMMAND, NULL_CHAR, \
     get_command_name, pack_binary_command, parse_binary_command, \
@@ -90,7 +91,7 @@ class GearmanConnection(object):
                 message='attempted to connect before required cooldown')
 
         self.allowed_connect_time = (
-            current_time + self.connect_cooldown_seconds
+                current_time + self.connect_cooldown_seconds
         )
 
         self._reset_connection()
@@ -285,3 +286,17 @@ class GearmanConnection(object):
     def __repr__(self):
         return ('<GearmanConnection %s:%d connected=%s>' %
                 (self.gearman_host, self.gearman_port, self.connected))
+
+
+class GearmanConnectionEncoder(json.JSONEncoder):
+    def default(self, obj):
+        return obj.__dict__
+
+
+class GearmanConnectionDencoder(json.JSONDecoder):
+    def __init__(self):
+        json.JSONDecoder.__init__(self, object_hook=GearmanConnectionDencoder.from_dict)
+
+    @staticmethod
+    def from_dict(d):
+        return d
