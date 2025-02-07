@@ -140,7 +140,10 @@ class GearmanJobRequest(object):
 
 class GearmanJobRequestEncoder(json.JSONEncoder):
     def default(self, obj):
-        return obj.__dict__
+        result = obj.__dict__
+        result.warning_updates = list(obj.warning_updates)
+        result.data_updates = list(obj.data_updates)
+        result.status_updates = list(obj.status_updates)
 
 
 class GearmanJobRequestDecoder(json.JSONDecoder):
@@ -149,4 +152,8 @@ class GearmanJobRequestDecoder(json.JSONDecoder):
 
     @staticmethod
     def from_dict(d):
+        d.warning_updates = collections.deque(d.get('warning_updates', []))
+        d.data_updates = collections.deque(d.get('data_updates', []))
+        d.status_updates = collections.deque(d.get('status_updates', []))
+
         return d
