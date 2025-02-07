@@ -47,8 +47,8 @@ class GearmanJobDecoder(json.JSONDecoder):
         json.JSONDecoder.__init__(self, object_hook=GearmanJobDecoder.from_dict)
 
     @staticmethod
-    def from_dict(d):
-        return d
+    def from_dict(d, conn):
+        return GearmanJob(connection=conn, handle=d['handle'], task=d['task'], unique=d['unique'], data=d['data'])
 
 
 class GearmanJobRequest(object):
@@ -144,7 +144,7 @@ class GearmanJobRequestEncoder(json.JSONEncoder):
         result['warning_updates'] = list(obj.warning_updates)
         result['data_updates'] = list(obj.data_updates)
         result['status_updates'] = list(obj.status_updates)
-
+        result['job'] = result['gearman_job'] = GearmanJobEncoder().encode(obj.gearman_job)
         return result
 
 
@@ -153,9 +153,7 @@ class GearmanJobRequestDecoder(json.JSONDecoder):
         json.JSONDecoder.__init__(self, object_hook=GearmanJobRequestDecoder.from_dict)
 
     @staticmethod
-    def from_dict(d):
-        d.warning_updates = collections.deque(d.get('warning_updates', []))
-        d.data_updates = collections.deque(d.get('data_updates', []))
-        d.status_updates = collections.deque(d.get('status_updates', []))
-
-        return d
+    def from_dict(d, conn):
+        job = GearmanJobDecoder().from_dict(json.loads(d['gearman_job']), conn)
+        result = GearmanJobRequest(gearman_job=job)
+        return result
