@@ -143,7 +143,7 @@ class GearmanJobRequestEncoder(json.JSONEncoder):
         return obj.__dict__
 
 
-class GearmanJobRequestDencoder(json.JSONDecoder):
+class GearmanJobRequestDecoder(json.JSONDecoder):
     def __init__(self):
         json.JSONDecoder.__init__(self, object_hook=GearmanJobRequestDencoder.from_dict)
 
