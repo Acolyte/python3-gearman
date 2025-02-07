@@ -42,9 +42,9 @@ class GearmanJobEncoder(json.JSONEncoder):
         return obj.__dict__
 
 
-class GearmanJobDencoder(json.JSONDecoder):
+class GearmanJobDecoder(json.JSONDecoder):
     def __init__(self):
-        json.JSONDecoder.__init__(self, object_hook=GearmanJobDencoder.from_dict)
+        json.JSONDecoder.__init__(self, object_hook=GearmanJobDecoder.from_dict)
 
     @staticmethod
     def from_dict(d):
@@ -145,7 +145,7 @@ class GearmanJobRequestEncoder(json.JSONEncoder):
 
 class GearmanJobRequestDecoder(json.JSONDecoder):
     def __init__(self):
-        json.JSONDecoder.__init__(self, object_hook=GearmanJobRequestDencoder.from_dict)
+        json.JSONDecoder.__init__(self, object_hook=GearmanJobRequestDecoder.from_dict)
 
     @staticmethod
     def from_dict(d):

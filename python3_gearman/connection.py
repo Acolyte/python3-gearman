@@ -293,9 +293,9 @@ class GearmanConnectionEncoder(json.JSONEncoder):
         return obj.__dict__
 
 
-class GearmanConnectionDencoder(json.JSONDecoder):
+class GearmanConnectionDecoder(json.JSONDecoder):
     def __init__(self):
-        json.JSONDecoder.__init__(self, object_hook=GearmanConnectionDencoder.from_dict)
+        json.JSONDecoder.__init__(self, object_hook=GearmanConnectionDecoder.from_dict)
 
     @staticmethod
     def from_dict(d):
